@@ -1,15 +1,3 @@
-## tornado-httpclient-mock
-A library for mocking requests in Tornado HTTP client 
-
-[![Build Status](https://travis-ci.org/SuminAndrew/tornado-httpclient-mock.svg?branch=master)](https://travis-ci.org/SuminAndrew/tornado-httpclient-mock)
-[![codecov](https://codecov.io/gh/SuminAndrew/tornado-httpclient-mock/branch/master/graph/badge.svg)](https://codecov.io/gh/SuminAndrew/tornado-httpclient-mock)
-
-This library can be used to patch `AsyncHTTPClient.fetch_impl` method to stub requests to external resources.
-
-`tornado_mock.httpclient.patch_http_client` does this patching on `AsyncHTTPClient` instance.
-After that you can use `tornado_mock.httpclient.set_stub` method to setup an appropriate responses to the requests.
-
-```python
 from tornado import gen
 from tornado.httpclient import AsyncHTTPClient
 from tornado.testing import AsyncHTTPTestCase
@@ -44,6 +32,3 @@ class HTTPClientMockTest(AsyncHTTPTestCase):
         set_stub(self.app_http_client, 'http://test.com/path', response_function=get_response)
 
         self.assertEqual(self.fetch('/test').body, b'STUB1STUB2')
-```
-
-For more information see docstrings in [httpclient.py](tornado_mock/httpclient.py).

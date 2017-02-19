@@ -1,0 +1,18 @@
+language: python
+python:
+  - 2.7
+  - 3.3
+  - 3.4
+  - 3.5
+  - 3.6
+install:
+  - pip install codecov
+  - python setup.py install
+  - mkdir ~/.python-eggs
+  - chmod og-wx ~/.python-eggs
+script:
+  - python setup.py test
+sudo: false
+after_success:
+  - coverage run setup.py test
+  - bash <(curl -s https://codecov.io/bash)
