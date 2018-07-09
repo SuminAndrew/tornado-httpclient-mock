@@ -7,12 +7,7 @@ from string import Template
 from tornado.httpclient import HTTPError, HTTPResponse
 from tornado.httputil import HTTPHeaders
 
-from tornado_mock.compat import basestring_type, iteritems, PY3, parse_qs, urlsplit, urlunsplit
-
-if PY3:
-    from io import StringIO
-else:
-    from cStringIO import StringIO
+from tornado_mock.compat import unicode_type, iteritems, parse_qs, urlsplit, urlunsplit, StringIO, BytesIO
 
 
 def safe_template(format_string, **kwargs):
@@ -120,7 +115,10 @@ def get_response_stub(request, code=200, **kwargs):
     :return:
     """
     buffer = kwargs.pop('buffer', None)
-    buffer = StringIO(buffer) if isinstance(buffer, basestring_type) else buffer
+    if isinstance(buffer, unicode_type):
+        buffer = StringIO(buffer)
+    elif isinstance(buffer, bytes):
+        buffer = BytesIO(buffer)
     kwargs.setdefault('request_time', 1)
 
     return HTTPResponse(request, code, buffer=buffer, **kwargs)
