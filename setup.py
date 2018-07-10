@@ -9,6 +9,7 @@ class TestHook(test):
         import nose
         nose.main(argv=['nosetests', 'tests/', '-v', '--logging-clear-handlers'])
 
+
 with open('README.md') as fh:
     long_description = fh.read()
 
