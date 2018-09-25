@@ -126,6 +126,10 @@ def _guess_headers(fileName):
         return HTTPHeaders({'Content-Type': 'application/json'})
     if fileName.endswith('.xml'):
         return HTTPHeaders({'Content-Type': 'application/xml'})
+    if fileName.endswith('.txt'):
+        return HTTPHeaders({'Content-Type': 'text/plain'})
+    if fileName.endswith('.proto'):
+        return HTTPHeaders({'Content-Type': 'application/x-protobuf'})
     return HTTPHeaders()
 
 
