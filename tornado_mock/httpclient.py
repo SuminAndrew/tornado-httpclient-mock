@@ -4,10 +4,11 @@ from collections import defaultdict
 from functools import partial
 from string import Template
 
+from tornado.escape import to_unicode, utf8
 from tornado.httpclient import HTTPError, HTTPResponse
 from tornado.httputil import HTTPHeaders
 
-from tornado_mock.compat import unicode_type, iteritems, parse_qs, urlsplit, urlunsplit, StringIO, BytesIO
+from tornado_mock.compat import httpcodes, iteritems, parse_qs, unicode_type, urlsplit, urlunsplit, StringIO, BytesIO
 
 
 def safe_template(format_string, **kwargs):
@@ -18,7 +19,7 @@ def safe_template(format_string, **kwargs):
     :param kwargs: placeholder values.
     :return str: formatted string.
     """
-    return Template(format_string).safe_substitute(**kwargs)
+    return Template(to_unicode(format_string)).safe_substitute(**kwargs)
 
 
 def patch_http_client(http_client, fail_on_unknown=True):
@@ -53,7 +54,7 @@ def patch_http_client(http_client, fail_on_unknown=True):
 
 def set_stub(http_client, url, request_method='GET',
              response_function=None, response_file=None, response_body='',
-             response_code=200, response_headers=None,
+             response_code=httpcodes.OK, response_headers=None,
              response_body_processor=safe_template, **kwargs):
     """Set response stub for requested url.
 
@@ -103,7 +104,7 @@ def set_stub(http_client, url, request_method='GET',
     _add_route(http_client, url, request_method, _response_function)
 
 
-def get_response_stub(request, code=200, **kwargs):
+def get_response_stub(request, code=httpcodes.OK, **kwargs):
     """A convenient wrapper for generating `tornado.httpclient.HTTPResponse` stubs.
     Method signature is similar to `tornado.httpclient.HTTPResponse` constructor.
     This wrapper automatically converts the value of `buffer` kwarg to `StringIO` instance and
@@ -115,13 +116,9 @@ def get_response_stub(request, code=200, **kwargs):
     :return:
     """
     buffer = kwargs.pop('buffer', None)
-    if isinstance(buffer, unicode_type):
-        buffer = StringIO(buffer)
-    elif isinstance(buffer, bytes):
-        buffer = BytesIO(buffer)
     kwargs.setdefault('request_time', 1)
 
-    return HTTPResponse(request, code, buffer=buffer, **kwargs)
+    return HTTPResponse(request, code, buffer=BytesIO(utf8(buffer)), **kwargs)
 
 
 def _guess_headers(fileName):
@@ -151,7 +148,7 @@ def _add_route(http_client, url, request_method, response_function):
 
 
 def _get_stub(path):
-    with open(path) as f:
+    with open(path, 'rb') as f:
         return f.read()
 
 

@@ -9,6 +9,7 @@ __all__ = [
 PY3 = sys.version_info >= (3,)
 
 if PY3:
+    import http.client as httpcodes
     from io import StringIO, BytesIO
     from urllib.parse import parse_qs, urlsplit, urlunsplit
 
@@ -18,6 +19,7 @@ if PY3:
         return d.items(**kw)
 
 else:
+    import httplib as httpcodes
     from cStringIO import StringIO
     from urlparse import parse_qs, urlsplit, urlunsplit
 
