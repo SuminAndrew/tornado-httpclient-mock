@@ -15,7 +15,7 @@ with open('README.md') as fh:
 
 setup(
     name='tornado-httpclient-mock',
-    version='0.1.2',
+    version='0.2.2',
     description='A library for mocking requests in Tornado HTTP client',
     url='https://github.com/SuminAndrew/tornado-httpclient-mock',
     author='Andrew Sumin',
