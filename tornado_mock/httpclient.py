@@ -115,10 +115,12 @@ def get_response_stub(request, code=httpcodes.OK, **kwargs):
     :param kwargs: kwargs that are passed to `tornado.httpclient.HTTPResponse` constructor.
     :return:
     """
-    buffer = kwargs.pop('buffer', None)
     kwargs.setdefault('request_time', 1)
 
-    return HTTPResponse(request, code, buffer=BytesIO(utf8(buffer)), **kwargs)
+    buffer = kwargs.pop('buffer', None)
+    buffer = BytesIO(utf8(buffer)) if buffer else None
+
+    return HTTPResponse(request, code, buffer=buffer, **kwargs)
 
 
 def _guess_headers(fileName):

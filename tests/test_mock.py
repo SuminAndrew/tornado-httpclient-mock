@@ -148,7 +148,7 @@ class _BaseHTTPClientMockTest(AsyncHTTPTestCase):
         )
 
         response = self.fetch('/simple_fetch')
-        self.assertEqual(response.body, b'401 : RESPONSE : MOCK DATA')
+        self.assertEqual(response.body, b'401 : text/plain : RESPONSE : MOCK DATA')
 
     def test_identical_mocks(self):
         patch_http_client(self.app_http_client)
